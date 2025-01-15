@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "delegation-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/delegation/DelegationWebPart.js",
+          "manifest": "./src/webparts/delegation/DelegationWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "DelegationWebPartStrings": "lib/webparts/delegation/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+  }
+}

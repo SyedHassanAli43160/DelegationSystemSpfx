@@ -1,0 +1,24 @@
+.primary{
+    background-color: #00bff3 !important;
+}
+.primary:hover{
+    background-color: #01b6e7 !important;
+}
+.secondary{
+background-color: #0072bc !important;
+}
+.secondary:hover{
+    background-color: #0b89db !important;
+}
+.tertiary{
+background-color: #8dc63f !important;
+}
+.tertiary:hover{
+    background-color: #76ad2b !important;
+}
+.quaternary{
+    background-color:#630460 !important;
+}
+.text-quaternary{
+    color:#630460 !important;
+}

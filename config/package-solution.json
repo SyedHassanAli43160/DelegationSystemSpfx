@@ -1,0 +1,49 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+ 
+  "solution": {
+   
+    "name": "getz-delegation-client-side-solution",
+    "id": "1b4094dc-69e9-496c-b2b4-c2fd513471a7",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+"webApiPermissionRequests": [
+  {
+    "resource": "Microsoft Graph",
+    "scope": "User.Read"
+  }
+],
+
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "getz-delegation description"
+      },
+      "longDescription": {
+        "default": "getz-delegation description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "getz-delegation Feature",
+        "description": "The feature that activates elements of the getz-delegation solution.",
+        "id": "2008b333-b7db-4f95-86bd-1fdb7c202ee8",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/getz-delegation.sppkg"
+  }
+}

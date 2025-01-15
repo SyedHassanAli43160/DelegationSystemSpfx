@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.18.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.24.0"
+    },
+    "version": "1.20.0",
+    "libraryName": "getz-delegation",
+    "libraryId": "1b4094dc-69e9-496c-b2b4-c2fd513471a7",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "getz-delegation",
+    "solutionShortDescription": "getz-delegation description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
