@@ -269,7 +269,7 @@ console.log("UserEmail",userProfile);
             </div>
 
             <div className="row">
-  {currentUserEmail === "hassandemo@xy76b.onmicrosoft.com" ? (
+  {currentUserEmail === "syed.ibrahim@getzpharma.com" ? (
     <>
       {/* Admin Mode: Apply "Assign From" and "Assign To" side by side */}
       <div className={`mb-2 col-sm-${formData.applyToAll ? '6' : '12'}`}>

@@ -11,7 +11,9 @@ export class DelegationService {
 
   public async createDelegation(delegation: Omit<IDelegation, 'Id'>): Promise<IDelegation> {
     try {
-      const baseUri = this.context.pageContext.web.absoluteUrl;
+      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+
+      // const baseUri = this.context.pageContext.web.absoluteUrl;
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
         `${baseUri}/_api/web/lists/GetByTitle('Getz-Delegations')/items`,
             SPHttpClient.configurations.v1,
@@ -48,7 +50,9 @@ export class DelegationService {
  
   public async createDelegationDetail(delegationDetail: IDelegationDetails): Promise<any> {
     try {
-      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri = this.context.pageContext.web.absoluteUrl;
+      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+
       // Construct the request URL
       const requestUrl = `${baseUri}/_api/web/lists/GetByTitle('Getz-DelegationDetails')/items`;
   
@@ -98,7 +102,9 @@ export class DelegationService {
 
   public async getDelegationsForCurrentUser(): Promise<Array<{ DelegateTo: number; StartDate: Date; EndDate: Date }>> {
     try {
-      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri = this.context.pageContext.web.absoluteUrl;
+      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+
       const currentUserId = this.context.pageContext.legacyPageContext.userId;
   
       // Step 1: Get delegations created by the current user

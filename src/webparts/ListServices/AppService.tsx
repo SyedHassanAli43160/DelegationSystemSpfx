@@ -14,7 +14,8 @@ export class DataService {
   // Method to get applications from the SharePoint list
   public async getApplications(): Promise<IApplicationRegisteration[]> {
     try {
-      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri = this.context.pageContext.web.absoluteUrl;
+      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const response: SPHttpClientResponse = await this.context.spHttpClient.get(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items`,
         SPHttpClient.configurations.v1
@@ -116,7 +117,8 @@ export class DataService {
 
       };
 console.log("Payload: ",payload)
-      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri = this.context.pageContext.web.absoluteUrl;
+      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items`,
         SPHttpClient.configurations.v1,
@@ -150,7 +152,8 @@ console.log("Payload: ",payload)
   public async updateApplication(application: IApplicationRegisteration): Promise<void> {
     try {
       console.log(application.sql_ApiUrl);
-      const baseUri = this.context.pageContext.web.absoluteUrl;
+      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+      // const baseUri = this.context.pageContext.web.absoluteUrl;
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items(${application.Id})`,
         SPHttpClient.configurations.v1,
@@ -178,7 +181,8 @@ console.log("Payload: ",payload)
   // Delete Application method
   public async deleteApplication(applicationId: number): Promise<void> {
     try {
-      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri = this.context.pageContext.web.absoluteUrl;
+      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items(${applicationId})`,
         SPHttpClient.configurations.v1,
