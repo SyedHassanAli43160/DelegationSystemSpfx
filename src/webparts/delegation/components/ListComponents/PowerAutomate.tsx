@@ -28,7 +28,7 @@ const MyApprovals: React.FC<{ context: any }> = () => {
     console.log("AccessToken",accessToken);
     try {
       // Fetch approval requests using the Power Automate API
-      const url = `https://asia.api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvalViews?$top=50&$filter=properties/userRole+eq+'Approver'+and+properties/isActive+eq+'true'+and+properties/isDescending+eq+'true'&api-version=2016-11-01`;
+      const url = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvalViews?$top=50&$filter=properties/userRole+eq+'Approver'+and+properties/isActive+eq+'true'+and+properties/isDescending+eq+'true'&api-version=2016-11-01`;
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -63,7 +63,7 @@ const MyApprovals: React.FC<{ context: any }> = () => {
     if (!selectedApprovalId) return;
 
     const accessToken = await tokenService.getAccessToken();
-    const url = `https://asia.api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalResponses`;
+    const url = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalResponses`;
 
     try {
       const response = await fetch(url, {
@@ -112,7 +112,7 @@ const MyApprovals: React.FC<{ context: any }> = () => {
     const accessToken = await tokenService.getAccessToken();
 
     // Step 1: Fetch the approval request details
-    const requestIdUrl = `https://asia.api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalRequests`;
+    const requestIdUrl = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalRequests`;
 
     try {
       const requestIdResponse = await fetch(requestIdUrl, {
@@ -138,7 +138,7 @@ const MyApprovals: React.FC<{ context: any }> = () => {
       const requestId = fullRequestId.split('/').pop(); // Extract only the last part
       console.log("RequestId: ", requestId);
       // Step 2: Reassign the approval using the fetched requestId
-      const reassignUrl = `https://asia.api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalRequests/${requestId}/reassign?api-version=2016-11-01`;
+      const reassignUrl = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalRequests/${requestId}/reassign?api-version=2016-11-01`;
 
       const reassignResponse = await fetch(reassignUrl, {
         method: 'POST',

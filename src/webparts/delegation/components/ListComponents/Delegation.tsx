@@ -247,7 +247,7 @@ console.log("UserEmail",userProfile);
     <div className="container mt-4">
       <div className="card">
         <div className="card-header">
-          <h3>Delegation Formss</h3>
+          <h3>Delegation Form</h3>
         </div>
 
         <div className="card-body">
