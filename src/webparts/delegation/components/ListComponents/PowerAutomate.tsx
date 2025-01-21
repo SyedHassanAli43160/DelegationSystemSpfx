@@ -25,7 +25,6 @@ const MyApprovals: React.FC<{ context: any }> = () => {
   // Fetch approvals data from Power Automate API
   const getApprovalData = async (): Promise<IApproval[]> => {
     const accessToken = await tokenService.getAccessToken();
-    console.log("AccessToken",accessToken);
     try {
       // Fetch approval requests using the Power Automate API
       const url = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvalViews?$top=50&$filter=properties/userRole+eq+'Approver'+and+properties/isActive+eq+'true'+and+properties/isDescending+eq+'true'&api-version=2016-11-01`;
@@ -43,7 +42,6 @@ const MyApprovals: React.FC<{ context: any }> = () => {
       }
 
       const data = await response.json();
-      console.log("response: ", data);
 
       // Map approval data to fit your structure
       return data.value.map((item: any) => ({
@@ -136,7 +134,6 @@ const MyApprovals: React.FC<{ context: any }> = () => {
       // Extract the requestId (this is the part after the last slash in the 'id' field)
       const fullRequestId = requestIdData[0].id; // Full URI
       const requestId = fullRequestId.split('/').pop(); // Extract only the last part
-      console.log("RequestId: ", requestId);
       // Step 2: Reassign the approval using the fetched requestId
       const reassignUrl = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalRequests/${requestId}/reassign?api-version=2016-11-01`;
 

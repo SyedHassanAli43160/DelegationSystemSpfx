@@ -62,7 +62,6 @@ const Delegation: React.FC<DelegationProps> = ({ context }) => {
 
         // Set email and user name
         setcurrentUserEmail(userProfile.Email);
-console.log("UserEmail",userProfile);
         // 2. Now, fetch the user ID from SharePoint REST API using the current email
         context.spHttpClient.get(
           `${baseUri}/_api/web/siteusers/getbyemail('${userProfile.Email}')`,
@@ -71,7 +70,6 @@ console.log("UserEmail",userProfile);
           .then((response: SPHttpClientResponse) => response.json())
           .then(userData => {
             // Set the current user ID
-            console.log("UserData:",userData);
             setcurrentUserid(userData.Id);  // This will set the user ID
           })
           .catch(error => {
@@ -140,7 +138,6 @@ console.log("UserEmail",userProfile);
     }
   };
   const handlePeopleByPickerChange = (items: any[]) => {
-    console.log("User Data:",items);
     const user = items.length > 0 ? items[0] : null;
     const userId = user?.id || "";
     setFormData(prevFormData => ({

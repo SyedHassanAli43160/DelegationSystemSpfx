@@ -145,7 +145,6 @@ export class DelegationService {
   
       const results = delegationDetails.map((detail) => {
         const matchingDelegation = delegations.find((d) => d.Id === detail.DelegationId);
-        console.log(detail);
         return {
           DelegateTo: detail.DelegateToId,
           StartDate: matchingDelegation?.StartDate instanceof Date

@@ -116,7 +116,6 @@ export class DataService {
         MyPending_Api_headers: application.MyPending_Api_headers,
 
       };
-console.log("Payload: ",payload)
       // const baseUri = this.context.pageContext.web.absoluteUrl;
       const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
@@ -151,7 +150,6 @@ console.log("Payload: ",payload)
   // Update Application method
   public async updateApplication(application: IApplicationRegisteration): Promise<void> {
     try {
-      console.log(application.sql_ApiUrl);
       const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       // const baseUri = this.context.pageContext.web.absoluteUrl;
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
