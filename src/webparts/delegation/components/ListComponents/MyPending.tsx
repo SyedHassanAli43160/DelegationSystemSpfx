@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { TaskService } from "../../../ListServices/MyPending"; // Adjust the path as necessary
 import { IMyPending } from "../../../../ListInterfaces/IMyPending";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import { SPHttpClient } from "@microsoft/sp-http";
+// import { SPHttpClient } from "@microsoft/sp-http";
+import { tokenService } from "../../../Services/AuthTokenService";
 import MyApprovals from "./PowerAutomate";
 interface Props {
   context: WebPartContext;
@@ -15,23 +16,31 @@ const GroupedTasksTable: React.FC<Props> = ({ context }) => {
   const [error, setError] = useState<string | null>(null);
   const [userEmails, setUserEmails] = useState<Record<string, string>>({});
 
+ 
+
   const fetchUserName = async (identifier: string, isEmail: boolean): Promise<string> => {
     try {
-      const url = isEmail
-        ? `${context.pageContext.web.absoluteUrl}/_api/web/siteusers/getbyemail('${identifier}')`
-        : `${context.pageContext.web.absoluteUrl}/_api/web/getuserbyid(${identifier})`;
-  
-      const response = await context.spHttpClient.get(url, SPHttpClient.configurations.v1);
-  
-      if (response.ok) {
-        const user = await response.json();
-        return user.Title || "Unknown User";
+     
+      const accessToken = await tokenService.getAccessToken('graph');
+      const graphUrl = isEmail
+        ? `https://graph.microsoft.com/v1.0/users/${identifier}`
+        : `https://graph.microsoft.com/v1.0/users/${identifier}`;
+
+      const graphResponse = await fetch(graphUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (graphResponse.ok) {
+        const user = await graphResponse.json();
+        return user.displayName || "Unknown User";
       }
-  
+
       return "Unknown User";
-    } catch (err) {
-      console.error(`Error fetching username for ${isEmail ? "email" : "ID"} ${identifier}:`, err);
-      return "Error Fetching Username";
+    } catch (error) {
+      console.error("Error fetching user name:", error);
+      return "Unknown User";
     }
   };
   
