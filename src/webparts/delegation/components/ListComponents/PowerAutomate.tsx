@@ -19,12 +19,12 @@ const MyApprovals: React.FC<{ context: any }> = () => {
   const [showModal, setShowModal] = useState(false);  
   const [showReassignModal, setShowReassignModal] = useState(false);
   const [newUserEmail, setNewUserEmail] = useState('');
-  const envid = "Default-d47cdcb6-440e-4098-b123-dd3e56360888";
+  const envid = "Default-3f9827bd-3709-41bc-9f53-0ec850e140cf";
   // const envid = "Default-bce03466-f793-402c-9ae9-9c0d6d4f1a87";
 
   // Fetch approvals data from Power Automate API
   const getApprovalData = async (): Promise<IApproval[]> => {
-    const accessToken = await tokenService.getAccessToken('flow');
+    const accessToken = await tokenService.getAccessToken();
     try {
       // Fetch approval requests using the Power Automate API
       const url = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvalViews?$top=50&$filter=properties/userRole+eq+'Approver'+and+properties/isActive+eq+'true'+and+properties/isDescending+eq+'true'&api-version=2016-11-01`;
@@ -60,8 +60,8 @@ const MyApprovals: React.FC<{ context: any }> = () => {
   const handleAction = async (action: 'Approve' | 'Reject') => {
     if (!selectedApprovalId) return;
 
-    const accessToken = await tokenService.getAccessToken('flow');
-    const url = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalResponses`;
+    const accessToken = await tokenService.getAccessToken();
+    const url = `https://emea.api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalResponses?api-version=2016-11-01`;
 
     try {
       const response = await fetch(url, {
@@ -107,7 +107,7 @@ const MyApprovals: React.FC<{ context: any }> = () => {
   const handleReassign = async () => {
     if (!newUserEmail || !selectedApprovalId) return;
 
-    const accessToken = await tokenService.getAccessToken('flow');
+    const accessToken = await tokenService.getAccessToken();
 
     // Step 1: Fetch the approval request details
     const requestIdUrl = `https://api.flow.microsoft.com/providers/Microsoft.ProcessSimple/environments/${envid}/approvals/${selectedApprovalId}/approvalRequests`;
@@ -208,17 +208,15 @@ const MyApprovals: React.FC<{ context: any }> = () => {
                 <th className="py-2 quaternary text-white">Title</th>
                 <th className="py-2 quaternary text-white">Details</th>
                 <th className="py-2 quaternary text-white">Status</th>
-                <th className="py-2 quaternary text-white">Requested By</th>
                 <th className="py-2 quaternary text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
               {approvals.map((approval) => (
                 <tr key={approval.id}>
-                  <td>{approval.title.split("by")[0].trim()}</td>
+                  <td>{approval.title}</td>
                   <td>{approval.details}</td>
                   <td>{approval.status}</td>
-                  <td>{approval.title.split("by")[1].trim()}</td>
 
                   <td>
                     {approval.status === 'Pending' && (

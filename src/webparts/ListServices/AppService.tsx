@@ -14,8 +14,8 @@ export class DataService {
   // Method to get applications from the SharePoint list
   public async getApplications(): Promise<IApplicationRegisteration[]> {
     try {
-      // const baseUri = this.context.pageContext.web.absoluteUrl;
-      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const response: SPHttpClientResponse = await this.context.spHttpClient.get(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items`,
         SPHttpClient.configurations.v1
@@ -116,8 +116,8 @@ export class DataService {
         MyPending_Api_headers: application.MyPending_Api_headers,
 
       };
-      // const baseUri = this.context.pageContext.web.absoluteUrl;
-      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items`,
         SPHttpClient.configurations.v1,
@@ -150,8 +150,8 @@ export class DataService {
   // Update Application method
   public async updateApplication(application: IApplicationRegisteration): Promise<void> {
     try {
-      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
-      // const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+      const baseUri = this.context.pageContext.web.absoluteUrl;
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items(${application.Id})`,
         SPHttpClient.configurations.v1,
@@ -179,8 +179,8 @@ export class DataService {
   // Delete Application method
   public async deleteApplication(applicationId: number): Promise<void> {
     try {
-      // const baseUri = this.context.pageContext.web.absoluteUrl;
-      const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+      const baseUri = this.context.pageContext.web.absoluteUrl;
+      // const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(
         `${baseUri}/_api/web/lists/GetByTitle('${this.listName}')/items(${applicationId})`,
         SPHttpClient.configurations.v1,

@@ -4,7 +4,6 @@ import { TaskService } from "../../../ListServices/MyPending"; // Adjust the pat
 import { IMyPending } from "../../../../ListInterfaces/IMyPending";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 // import { SPHttpClient } from "@microsoft/sp-http";
-import { tokenService } from "../../../Services/AuthTokenService";
 import MyApprovals from "./PowerAutomate";
 interface Props {
   context: WebPartContext;
@@ -14,35 +13,28 @@ const GroupedTasksTable: React.FC<Props> = ({ context }) => {
   const [groupedTasks, setGroupedTasks] = useState<Record<string, IMyPending[]>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userEmails, setUserEmails] = useState<Record<string, string>>({});
+  // const [userEmails, setUserEmails] = useState<Record<string, string>>({});
 
- 
-
-  const fetchUserName = async (identifier: string, isEmail: boolean): Promise<string> => {
-    try {
-     
-      const accessToken = await tokenService.getAccessToken('graph');
-      const graphUrl = isEmail
-        ? `https://graph.microsoft.com/v1.0/users/${identifier}`
-        : `https://graph.microsoft.com/v1.0/users/${identifier}`;
-
-      const graphResponse = await fetch(graphUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (graphResponse.ok) {
-        const user = await graphResponse.json();
-        return user.displayName || "Unknown User";
-      }
-
-      return "Unknown User";
-    } catch (error) {
-      console.error("Error fetching user name:", error);
-      return "Unknown User";
-    }
-  };
+  // const fetchUserName = async (identifier: string, isEmail: boolean): Promise<string> => {
+  //   try {
+  //     console.log(userEmails);
+  //     const url = isEmail
+  //       ? `${context.pageContext.web.absoluteUrl}/_api/web/siteusers/getbyemail('${identifier}')`
+  //       : `${context.pageContext.web.absoluteUrl}/_api/web/getuserbyid(${identifier})`;
+  
+  //     const response = await context.spHttpClient.get(url, SPHttpClient.configurations.v1);
+  
+  //     if (response.ok) {
+  //       const user = await response.json();
+  //       return user.Title || "Unknown User";
+  //     }
+  
+  //     return "Unknown User";
+  //   } catch (err) {
+  //     console.error(`Error fetching username for ${isEmail ? "email" : "ID"} ${identifier}:`, err);
+  //     return "Error Fetching Username";
+  //   }
+  // };
   
 
   useEffect(() => {
@@ -65,27 +57,27 @@ const GroupedTasksTable: React.FC<Props> = ({ context }) => {
     fetchTasks();
   }, [context]);
 
-  useEffect(() => {
-    const resolveUsernames = async () => {
-      const emails: Record<string, string> = {};
-      for (const taskGroup of Object.values(groupedTasks)) {
-        for (const task of taskGroup) {
-          // Check if AssignBy is defined before calling .includes()
-          const isEmail = task.AssignBy ? task.AssignBy.includes("@") : false; // Default to false if undefined
+  // useEffect(() => {
+  //   const resolveUsernames = async () => {
+  //     const emails: Record<string, string> = {};
+  //     for (const taskGroup of Object.values(groupedTasks)) {
+  //       for (const task of taskGroup) {
+  //         // Check if AssignBy is defined before calling .includes()
+  //         const isEmail = task.AssignBy ? task.AssignBy.includes("@") : false; // Default to false if undefined
   
-          if (task.AssignBy && !emails[task.AssignBy]) {
-            const username = await fetchUserName(task.AssignBy, isEmail);
-            emails[task.AssignBy] = username;
-          }
-        }
-      }
-      setUserEmails((prevEmails) => ({ ...prevEmails, ...emails }));
-    };
+  //         if (task.AssignBy && !emails[task.AssignBy]) {
+  //           const username = await fetchUserName(task.AssignBy, isEmail);
+  //           emails[task.AssignBy] = username;
+  //         }
+  //       }
+  //     }
+  //     setUserEmails((prevEmails) => ({ ...prevEmails, ...emails }));
+  //   };
   
-    if (Object.keys(groupedTasks).length > 0) {
-      resolveUsernames();
-    }
-  }, [groupedTasks]);
+  //   if (Object.keys(groupedTasks).length > 0) {
+  //     resolveUsernames();
+  //   }
+  // }, [groupedTasks]);
   
   if (isLoading) {
     return <div className="alert alert-info">Loading tasks...</div>;
@@ -123,8 +115,9 @@ const GroupedTasksTable: React.FC<Props> = ({ context }) => {
               </td>
             )}
             <td className="">{task.TaskName}</td>
-            <td className="">
-              {task.AssignBy ? userEmails[task.AssignBy] || "Loading..." : "Unknown User"}
+            <td className="w-auto">
+              {/* {task.AssignBy ? userEmails[task.AssignBy] || "Loading..." : "Unknown User"} */}
+              {task.AssignBy}
             </td>
             <td className="">
               {task.AssignDate ? new Date(task.AssignDate).toLocaleDateString() : "N/A"}
