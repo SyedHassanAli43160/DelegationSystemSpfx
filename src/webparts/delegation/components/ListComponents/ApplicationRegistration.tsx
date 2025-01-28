@@ -6,7 +6,7 @@ import { IApplicationRegisteration } from "../../../../ListInterfaces/Appregiste
 const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
   const [applications, setApplications] = React.useState<IApplicationRegisteration[]>([]);
   const [currentApplication, setCurrentApplication] = React.useState<IApplicationRegisteration | null>(null);
-  const [selectedDataSource, setSelectedDataSource] = React.useState<string>('Dataverse');
+  const [selectedDataSource, setSelectedDataSource] = React.useState<string>('SPList');
   const [showForm, setShowForm] = React.useState(false);
   const service = new DataService(context);
 
@@ -69,7 +69,7 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
 
   const handleEdit = (application: IApplicationRegisteration) => {
     setCurrentApplication(application);
-    setSelectedDataSource(application.datasourceType || 'Dataverse');
+    setSelectedDataSource(application.datasourceType || 'SPList');
     setShowForm(true);
   };
 
@@ -96,7 +96,7 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
           onClick={() => {
             setCurrentApplication({
               ApplicationName: '',
-              datasourceType: 'Dataverse',
+              datasourceType: 'SPList',
               dv_primaryEntityName: '',
               dv_relationshipName: '',
               dv_environmentUrl: '',
@@ -134,7 +134,7 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
               MyPending_Api_headers: '',
 
             });
-            setSelectedDataSource('Dataverse');
+            setSelectedDataSource('SPList');
             setShowForm(true);
           }}
         >
@@ -291,14 +291,13 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
                 if (currentApplication) {
                   setCurrentApplication({
                     ...currentApplication,
-                    datasourceType: e.target.value as 'Dataverse' | 'SQL' | 'SPList' | 'API',
+                    datasourceType: e.target.value as  'SQL' | 'SPList' | 'API',
                   });
                 }
               }}
               disabled={!!currentApplication?.Id}
             >
               <option value="">Select Data Source</option>
-              <option value="Dataverse">Dataverse</option>
               <option value="SPList">SharePoint List</option>
               <option value="SQL">Azure SQL</option>
               <option value="API">API</option>
@@ -307,7 +306,7 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
           </div>
 
           {/* Dataverse Specific Fields */}
-          {selectedDataSource === 'Dataverse' && (
+          {/* {selectedDataSource === 'Dataverse' && (
             <div className="row">
               <div className="col-sm-4">
                 <div className="form-floating mb-2">
@@ -352,7 +351,7 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* SQL Specific Fields */}
           {selectedDataSource === 'SQL' && (

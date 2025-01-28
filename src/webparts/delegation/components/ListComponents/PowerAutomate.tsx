@@ -208,15 +208,18 @@ const MyApprovals: React.FC<{ context: any }> = () => {
                 <th className="py-2 quaternary text-white">Title</th>
                 <th className="py-2 quaternary text-white">Details</th>
                 <th className="py-2 quaternary text-white">Status</th>
+                <th className="py-2 quaternary text-white">Requested By</th>
+
                 <th className="py-2 quaternary text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
               {approvals.map((approval) => (
                 <tr key={approval.id}>
-                  <td>{approval.title}</td>
+                  <td>{approval.title.split("by")[0]}</td>
                   <td>{approval.details}</td>
                   <td>{approval.status}</td>
+                  <td>{approval.title.split("by")[1]}</td>
 
                   <td>
                     {approval.status === 'Pending' && (

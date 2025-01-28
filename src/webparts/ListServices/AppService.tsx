@@ -1,7 +1,7 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { IApplicationRegisteration } from '../../ListInterfaces/Appregisteration';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
-
+import {encryptString,decryptString} from "./EncryptionService";
 export class DataService {
   private listName: string;
   private context: WebPartContext;
@@ -40,17 +40,21 @@ export class DataService {
         PrevAssigneeColName: item.PrevAssigneeColName,
         PrevAssigneeColNameChild: item.PrevAssigneeColNameChild,
         datasourceType: item.datasourceType,
-        dv_primaryEntityName: item.dv_primaryEntityName,
-        dv_relationshipName: item.dv_relationshipName,
-        dv_environmentUrl: item.dv_environmentUrl,
+        // dv_primaryEntityName: item.dv_primaryEntityName,
+        // dv_relationshipName: item.dv_relationshipName,
+        // dv_environmentUrl: item.dv_environmentUrl,
         sql_ServerName: item.sql_ServerName,
         sql_DatabaseName: item.sql_DatabaseName,
         sql_SchemaName: item.sql_SchemaName,
         sql_Username: item.sql_Username,
-        sql_Password: item.sql_Password,
+        sql_Password: item.sql_Password!=null? decryptString(item.sql_Password):"",
+        // sql_Password: item.sql_Password,
+
         sql_ApiUrl: item.sql_ApiUrl,
         sql_ApiUserName:item.sql_ApiUserName,
-        sql_ApiPassword:item.sql_ApiPassword,
+        sql_ApiPassword:item.sql_ApiPassword!=null?decryptString(item.sql_ApiPassword):"",
+        // sql_ApiPassword:item.sql_ApiPassword,
+
         sp_ListSiteUrl: item.sp_ListSiteUrl,
         Api_method: item.Api_method,
         Api_url: item.Api_url,
@@ -59,7 +63,8 @@ export class DataService {
         Api_headers: item.Api_headers,
         Api_authentication: item.Api_authentication,
         Api_username: item.Api_username,
-        Api_password: item.Api_password,
+        Api_password: item.Api_password!=null?decryptString(item.Api_password):"",
+        // Api_password: item.Api_password,
         MyPending_Api_method: item.MyPending_Api_method,
         MyPending_Api_url: item.MyPending_Api_url,
         MyPending_Api_querystring: item.MyPending_Api_querystring,
@@ -75,6 +80,7 @@ export class DataService {
   // Create Application method
   public async createApplication(application: Omit<IApplicationRegisteration, 'Id'>): Promise<IApplicationRegisteration> {
     try {
+      console.log("App Payload: ",application);
       const payload = {
         ApplicationName: application.ApplicationName,
         tablename: application.tablename,
@@ -89,17 +95,17 @@ export class DataService {
         PrevAssigneeColNameChild: application.PrevAssigneeColNameChild,
 
         datasourceType: application.datasourceType,
-        dv_primaryEntityName: application.dv_primaryEntityName,
-        dv_relationshipName: application.dv_relationshipName,
-        dv_environmentUrl: application.dv_environmentUrl,
+        // dv_primaryEntityName: application.dv_primaryEntityName,
+        // dv_relationshipName: application.dv_relationshipName,
+        // dv_environmentUrl: application.dv_environmentUrl,
         sql_ServerName: application.sql_ServerName,
         sql_DatabaseName: application.sql_DatabaseName,
         sql_SchemaName: application.sql_SchemaName,
         sql_Username: application.sql_Username,
-        sql_Password: application.sql_Password,
+        sql_Password: application.sql_Password ? encryptString(application.sql_Password) : "",
         sql_ApiUrl: application.sql_ApiUrl,
         sql_ApiUserName:application.sql_ApiUserName,
-        sql_ApiPassword:application.sql_ApiPassword,
+        sql_ApiPassword:application.sql_ApiPassword?encryptString(application.sql_ApiPassword||""):"",
         sp_ListSiteUrl: application.sp_ListSiteUrl,
         Api_method: application.Api_method,
         Api_url: application.Api_url,
@@ -108,7 +114,7 @@ export class DataService {
         Api_headers: application.Api_headers,
         Api_authentication: application.Api_authentication,
         Api_username: application.Api_username,
-        Api_password: application.Api_password,
+        Api_password:application.Api_password? encryptString(application.Api_password):"",
         MyPending_Api_method: application.MyPending_Api_method,
         MyPending_Api_url: application.MyPending_Api_url,
         MyPending_Api_querystring: application.MyPending_Api_querystring,
@@ -150,6 +156,10 @@ export class DataService {
   // Update Application method
   public async updateApplication(application: IApplicationRegisteration): Promise<void> {
     try {
+      application.Api_password=encryptString(application.Api_password);
+      application.sql_Password=encryptString(application.sql_Password);
+      application.sql_ApiPassword=encryptString(application.sql_ApiPassword||"");
+      
       // const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
       const baseUri = this.context.pageContext.web.absoluteUrl;
       const response: SPHttpClientResponse = await this.context.spHttpClient.post(

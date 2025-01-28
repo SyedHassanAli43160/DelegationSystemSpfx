@@ -1,6 +1,7 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { SPHttpClient } from "@microsoft/sp-http";
 import { IMyPending } from "../../ListInterfaces/IMyPending";
+import {decryptString} from "./EncryptionService";
 
 interface IMyPendingApiBody {
   assignTo?: string;
@@ -94,18 +95,32 @@ export class TaskService {
     app: any,
     currentUser: { Id: number; Email: string }
   ): Promise<IMyPending[]> {
-    switch (app.datasourceType) {
-      case "SPList":
-        return this.fetchSPListTasks(app, currentUser);
-      case "SQL":
-        return this.fetchSQLTasks(app, currentUser);
-      case "API":
-        return this.fetchAPITasks(app, currentUser);
-      default:
-        console.warn(`Unsupported datasourceType: ${app.datasourceType}`);
-        return [];
+    let tasks: IMyPending[] = [];
+
+    // Attempt to fetch tasks from each data source
+    try {
+      switch (app.datasourceType) {
+        case "SPList":
+          tasks = await this.fetchSPListTasks(app, currentUser);
+          break;
+        case "SQL":
+          tasks = await this.fetchSQLTasks(app, currentUser);
+          break;
+        case "API":
+          tasks = await this.fetchAPITasks(app, currentUser);
+          break;
+        default:
+          console.warn(`Unsupported datasourceType: ${app.datasourceType}`);
+          break;
+      }
+    } catch (error) {
+      console.warn(`Error fetching tasks for application ${app.ApplicationName}:`, error);
     }
+
+    // Fallback to return empty array if no tasks could be fetched
+    return tasks.length > 0 ? tasks : [];
   }
+
 
   /**
    * Fetch tasks from SharePoint List
@@ -131,7 +146,7 @@ export class TaskService {
       AssignDate: item.Created ? new Date(item.Created) : undefined,
       AssignBy: item.AssignBy,
       ApplicationName: app.ApplicationName,
-      AppUrl: app.sp_ListSiteUrl,
+      AppUrl: app.AppUrl,
     }));
   }
 
@@ -149,7 +164,7 @@ export class TaskService {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Basic " + btoa(`${app.sql_ApiUserName}:${app.sql_ApiPassword}`), // Properly concatenate username and password
+        "Authorization": "Basic " + btoa(`${app.sql_ApiUserName}:${decryptString(app.sql_ApiPassword)}`), // Properly concatenate username and password
       },
       body: JSON.stringify(payload),
     });
@@ -189,7 +204,7 @@ export class TaskService {
       : {};
 
     if (app.Api_authentication === "Basic") {
-      headers["Authorization"] = "Basic " + btoa(`${app.Api_username}:${app.Api_password}`);
+      headers["Authorization"] = "Basic " + btoa(`${app.Api_username}:${decryptString(app.Api_password)}`);
     }
 
     const requestOptions: RequestInit = {
