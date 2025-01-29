@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import { GraphService } from "../../../Services/GraphService";
+// import { GraphService } from "../../../Services/GraphService";
 import { DataService } from "../../../ListServices/AppService";
 import { DelegationService } from "../../../ListServices/DelegationService";
 import PeoplePickerComponent from "./PeoplePicker";
@@ -52,38 +52,37 @@ const Delegation: React.FC<DelegationProps> = ({ context }) => {
   const delegationService = new DelegationService(context);
 
   useEffect(() => {
-    const graphService = new GraphService(context.spHttpClient, context.pageContext.web.absoluteUrl);
-
     const baseUri = context.pageContext.web.absoluteUrl;
-
-    // 1. Fetch the current user's profile using SharePoint REST API
-    graphService.getSharePointUserProfile()
+  
+    // Fetch current user details from SharePoint REST API
+    context.spHttpClient.get(
+      `${baseUri}/_api/web/currentuser`,  // Fetches current logged-in user
+      SPHttpClient.configurations.v1
+    )
+      .then((response: SPHttpClientResponse) => response.json())
       .then(userProfile => {
-
         // Set email and user name
         setcurrentUserEmail(userProfile.Email);
-        // 2. Now, fetch the user ID from SharePoint REST API using the current email
-        context.spHttpClient.get(
+  
+        // Fetch the user ID from SharePoint REST API using the current email
+        return context.spHttpClient.get(
           `${baseUri}/_api/web/siteusers/getbyemail('${userProfile.Email}')`,
           SPHttpClient.configurations.v1
-        )
-          .then((response: SPHttpClientResponse) => response.json())
-          .then(userData => {
-            // Set the current user ID
-            setcurrentUserid(userData.Id);  // This will set the user ID
-          })
-          .catch(error => {
-            console.error("Error fetching user ID from SharePoint:", error);
-            setError(`Failed to fetch user ID: ${error.message}`);
-          });
+        );
+      })
+      .then((response: SPHttpClientResponse) => response.json())
+      .then(userData => {
+        // Set the current user ID
+        setcurrentUserid(userData.Id);
       })
       .catch(error => {
-        console.error("Error fetching user profile:", error);
-        setError(`Failed to fetch user profile: ${error.message}`);
+        console.error("Error fetching user data from SharePoint:", error);
+        setError(`Failed to fetch user data: ${error.message}`);
       });
-
+  
     fetchApplications();
   }, [context]);
+  
 
   const fetchApplications = async () => {
     try {
