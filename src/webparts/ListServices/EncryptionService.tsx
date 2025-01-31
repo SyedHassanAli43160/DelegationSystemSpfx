@@ -1,30 +1,51 @@
-import CryptoJS from "crypto-js";
+const API_BASE_URL = "https://ecryptdecryptapi.azurewebsites.net/api/Encryption"; // Replace with actual API URL
 
-const secretKey = "s3cr3tK3y@2025!"; // Replace with a securely generated key
 
-// Function to encrypt a string
-export const encryptString = (text: string) => {
-    return CryptoJS.AES.encrypt(text, secretKey).toString();
-  };
-  
-  // Function to decrypt a string
-  export const decryptString = (cipherText: string) => {
-    console.log(cipherText);
-    if (!cipherText || typeof cipherText !== "string") {
-      throw new Error("Invalid ciphertext provided for decryption.");
+export const encryptString = async (text: string) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/encrypt`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Text: text
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to encrypt data.");
     }
-  
-    try {
-      const bytes = CryptoJS.AES.decrypt(cipherText, secretKey);
-      const originalText = bytes.toString(CryptoJS.enc.Utf8);
-  
-      if (!originalText) {
-        throw new Error("Decryption failed. The ciphertext may be invalid or corrupted.");
+
+    const result = await response.text();
+    console.log("result",result);
+    return result; // Assuming API returns { encryptedData: "..." }
+  } catch (error) {
+    console.error("Error during encryption:", error);
+    throw error;
+  }
+};
+export const decryptString = (cipherText: string) => {
+  return fetch(`${API_BASE_URL}/decrypt`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      Text: cipherText
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to decrypt data.");
       }
-  
-      return originalText;
-    } catch (error) {
+      return response.text(); // Assuming API returns raw decrypted string
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
       console.error("Error during decryption:", error);
       throw error;
-    }
-  };
+    });
+};

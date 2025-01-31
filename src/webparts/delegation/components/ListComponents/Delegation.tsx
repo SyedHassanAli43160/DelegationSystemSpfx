@@ -73,6 +73,7 @@ const Delegation: React.FC<DelegationProps> = ({ context }) => {
       .then((response: SPHttpClientResponse) => response.json())
       .then(userData => {
         // Set the current user ID
+        console.log("LoggedInUser", userData);
         setcurrentUserid(userData.Id);
       })
       .catch(error => {
@@ -88,7 +89,6 @@ const Delegation: React.FC<DelegationProps> = ({ context }) => {
     try {
       const apps = await dataService.getApplications();
       const activeApplications = apps.filter(app => app.Active);
-
       setApplications(activeApplications);
     } catch (error) {
       console.error("Error fetching applications:", error);
@@ -138,6 +138,7 @@ const Delegation: React.FC<DelegationProps> = ({ context }) => {
   };
   const handlePeopleByPickerChange = (items: any[]) => {
     const user = items.length > 0 ? items[0] : null;
+    console.log("user", user);
     const userId = user?.id || "";
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -146,6 +147,7 @@ const Delegation: React.FC<DelegationProps> = ({ context }) => {
   };
   const handlePeoplePickerChange = (items: any[]) => {
     const user = items.length > 0 ? items[0] : null;
+    console.log("SelectedUser", user);
     const userId = user?.id || "";
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -160,6 +162,8 @@ const Delegation: React.FC<DelegationProps> = ({ context }) => {
   };
   const handleRulePeoplePickerChange = (index: number, items: any[]) => {
     const user = items.length > 0 ? items[0] : null;
+    console.log("SelectedUser", user);
+
     const userId = user?.id || ""; // Ensure a fallback empty string
 
     setRules(prevRules =>

@@ -53,7 +53,6 @@ export class TaskService {
    * Get current user details
    */
   private async getCurrentUser(): Promise<{ Id: number; Email: string }> {
-    // const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
 
     const baseUri = this.context.pageContext.web.absoluteUrl;
     const response = await this.context.spHttpClient.get(
@@ -72,8 +71,8 @@ export class TaskService {
    * Fetch active applications
    */
   private async getApplications(): Promise<any[]> {
-    const baseUri = this.context.pageContext.web.absoluteUrl;
-    // const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
+    // const baseUri = this.context.pageContext.web.absoluteUrl;
+    const baseUri="https://getzpharma.sharepoint.com/sites/GetPortalData";
 
     const response = await this.context.spHttpClient.get(
       `${baseUri}/_api/web/lists/GetByTitle('Getz-Applications')/items?$filter=Active eq 1`,

@@ -56,6 +56,10 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
         } else {
           // Create new application
           const createdApplication = await service.createApplication(applicationToSave);
+          createdApplication.Api_password = createdApplication.Api_password != null ? applicationToSave.Api_password : createdApplication.Api_password ?? "";
+          createdApplication.sql_Password = createdApplication.sql_Password != null ? applicationToSave.sql_Password : createdApplication.sql_Password ?? "";
+          createdApplication.sql_ApiPassword = createdApplication.sql_ApiPassword != null ? applicationToSave.sql_ApiPassword : createdApplication.sql_ApiPassword ?? "";
+
           setApplications((prevApplications) => [...prevApplications, createdApplication]);
         }
 
@@ -68,6 +72,7 @@ const ApplicationRegistration = ({ context }: { context: WebPartContext }) => {
   };
 
   const handleEdit = (application: IApplicationRegisteration) => {
+    application.sql_ApiPassword
     setCurrentApplication(application);
     setSelectedDataSource(application.datasourceType || 'SPList');
     setShowForm(true);
